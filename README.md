@@ -1,7 +1,5 @@
 # Metalmax - Electrical Network Diagnosis
 
-This repository contains the implementation of **Practical Assignment II** for the course **Algorithms I**, aimed at analyzing an internal electrical network of a steel plant and providing critical diagnostics to improve its efficiency and functionality.
-
 ## 📋 Problem Description
 
 Metalmax, a major steel company, uses a complex electrical network consisting of:
