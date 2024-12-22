@@ -8,9 +8,6 @@
 
 
 #include "Graph.h"
-#include "Requester.h"
-#include "Receiver.h"
-
 enum GraphNodeColor {
 	// Não foi descobreto.
 	UNDISCOVERED,
@@ -29,6 +26,10 @@ using DFS_DATA = std::tuple<
 	std::unordered_map<GraphNode*, GraphNodeColor, GraphNodeHash, GraphNodeEqual>,
 	std::unordered_map<GraphNode*, DiscoveryTime, GraphNodeHash, GraphNodeEqual>,
 	std::unordered_map<GraphNode*, FinishingTime, GraphNodeHash, GraphNodeEqual>>;
+using BFS_DATA = std::tuple<
+	std::unordered_map<GraphNode*, GraphNodeColor, GraphNodeHash, GraphNodeEqual>,
+	std::unordered_map<GraphNode*, DiscoveryTime, GraphNodeHash, GraphNodeEqual>,
+	std::unordered_map<GraphNode*, FinishingTime, GraphNodeHash, GraphNodeEqual>>;
 using SCC = std::vector<GraphNode>;
 
 /**
@@ -38,20 +39,6 @@ using SCC = std::vector<GraphNode>;
  */
 class Algorithms {
 public:
-	/**
-	 * \brief Executa o algoritmo de casamento estável de Gale-Shapley.
-	 *
-	 * \details O algoritmo tenta encontrar um casamento estável entre Requesters (solicitantes) e Receivers (receptores)
-	 * baseando-se em listas de prioridade. Requesters fazem propostas para Receivers e os Receivers
-	 * aceitam ou rejeitam as propostas de acordo com suas preferências. O objetivo é garantir um casamento
-	 * estável, onde não existam dois elementos que prefiram um ao outro em detrimento de seus parceiros atuais.
-	 *
-	 * \note Complexidade O(n^2), onde n é o número de Requesters (e o mesmo para os Receivers).
-	 *
-	 * \param men Vetor de Requesters (solicitantes) participantes no algoritmo.
-	 */
-	static void GaleShapley(const std::vector<Requester*>& men);
-
 	/**
 	 * \brief Realiza uma busca em profundidade (DFS) em um grafo.
 	 *
@@ -68,6 +55,7 @@ public:
 	 * \note Complexidade: O(V + E), onde V é o número de vértices (nós) e E é o número de arestas do grafo.
 	 */
 	static DFS_DATA DFS(Graph* graph, NodeVisitor* nodeVisitor);
+	static void BFS(Graph* graph, NodeVisitor* nodeVisitor);
 
 	/**
 	 * \brief Realiza uma busca em profundidade (DFS) em um grafo.
@@ -85,6 +73,7 @@ public:
 	 * \note Complexidade: O(V + E), onde V é o número de vértices (nós) e E é o número de arestas do grafo.
 	 */
 	static DFS_DATA DFS(std::vector<GraphNode>& visitingNodes, NodeVisitor* nodeVisitor);
+	static void BFS(std::vector<GraphNode>& visitingNodes, NodeVisitor* nodeVisitor);
 
 	/**
 	 *

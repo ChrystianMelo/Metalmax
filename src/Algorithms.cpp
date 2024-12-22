@@ -70,6 +70,31 @@ namespace {
 	}
 
 	/**
+	 * \brief Metodo auxiliar
+	 *
+	 * \see Algorithms::dfs()
+	 */
+	static void bfs_visit(GraphNode* node, std::size_t* time,
+		std::unordered_map<GraphNode*, GraphNodeColor, GraphNodeHash, GraphNodeEqual>* coloring,
+		std::unordered_map<GraphNode*, DiscoveryTime, GraphNodeHash, GraphNodeEqual>* start,
+		std::unordered_map<GraphNode*, FinishingTime, GraphNodeHash, GraphNodeEqual>* finish,
+		NodeVisitor* nodeVisitor) {
+		(*time)++;
+		(*start)[node] = *time;
+		(*coloring)[node] = GraphNodeColor::DISCOVERED;
+
+		nodeVisitor->visit(node);
+
+		for (GraphEdge& edge : node->getEdges())
+			if (GraphNode* target = edge.getTarget(); (*coloring)[target] == GraphNodeColor::UNDISCOVERED)
+				bfs_visit(target, time, coloring, start, finish, nodeVisitor);
+
+		(*coloring)[node] = GraphNodeColor::FINISHED;
+		(*time)++;
+		(*finish)[node] = *time;
+	}
+
+	/**
 	* \brief
 	*/
 	std::vector<GraphNode> sortNodesByFinishingTime(
@@ -98,44 +123,6 @@ namespace {
 	}
 }
 
-void Algorithms::GaleShapley(const std::vector<Requester*>& Requesters) {
-	assert(!Requesters.empty());
-
-	std::size_t index = 0;
-
-	for (Requester* requester = Requesters.at(index); requester != nullptr;) {
-		Receiver* receiver = requester->getTopPriorityReceiver();
-
-		if (Requester* matchedRequester = receiver->getRequester(); matchedRequester == nullptr) {
-			requester->match(receiver);
-
-			// Se o Requester da vez for o Requester correspondente ao index então continua a incrementação do index. 
-			// Caso contrario, algum par foi quebrado e Requester da vez foi divorciado.
-			if (index < Requesters.size() && requester == Requesters.at(index))
-				index++;
-
-			requester = (index < Requesters.size()) ? Requesters.at(index) : nullptr;
-		}
-		else {
-			if (receiver->isBetterMatch(*requester)) {
-				// Encerra o antigo match
-				receiver->setRequester(nullptr);
-				matchedRequester->setReceiver(nullptr);
-
-				requester->match(receiver);
-
-				requester = matchedRequester;
-				index++;
-			}
-			else {
-				// Remove o Receiver que negou o pedido da vez, pois uma proposta nunca é feita 2x.
-				requester->popTopPriorityReceiver();
-			}
-		}
-
-	}
-}
-
 DFS_DATA Algorithms::DFS(Graph* graph, NodeVisitor* nodeVisitor) {
 	return Algorithms::DFS(graph->getNodes(), nodeVisitor);
 }
@@ -158,6 +145,33 @@ DFS_DATA Algorithms::DFS(std::vector<GraphNode>& visitingNodes, NodeVisitor* nod
 			dfs_visit(&node, &time, &coloring, &start, &finish, nodeVisitor);
 
 	return std::make_tuple(coloring, start, finish);;
+}
+
+void Algorithms::BFS(Graph* graph, NodeVisitor* nodeVisitor) {
+	Algorithms::BFS(graph->getNodes(), nodeVisitor);
+}
+
+void Algorithms::BFS(std::vector<GraphNode>& visitingNodes, NodeVisitor* nodeVisitor) {
+	std::unordered_map<GraphNode*, bool, GraphNodeHash, GraphNodeEqual> visited;
+	std::queue<GraphNode*> queue;
+
+	queue.push(&visitingNodes[0]);
+	visited[&visitingNodes[0]] = true;
+
+	while (!queue.empty()) {
+		GraphNode* current = queue.front();
+		queue.pop();
+
+		nodeVisitor->visit(current);
+
+		for (GraphEdge& edge : current->getEdges()) {
+			GraphNode* neighbor = edge.getTarget();
+			if (!visited[neighbor]) {
+				queue.push(neighbor);
+				visited[neighbor] = true;
+			}
+		}
+	}
 }
 
 void Algorithms::transposeGraph(Graph& graph) {
