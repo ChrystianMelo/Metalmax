@@ -58,9 +58,9 @@ BOOST_AUTO_TEST_CASE(BFS_DisconnectedGraph) {
 
     BOOST_CHECK(visited.find(node1) != visited.end());
     BOOST_CHECK(visited.find(node2) != visited.end());
-    BOOST_CHECK(visited.find(node3) != visited.end());
-    BOOST_CHECK(visited.find(node4) != visited.end());
-    BOOST_CHECK(visited.find(node5) != visited.end());
+    BOOST_CHECK(visited.find(node3) == visited.end());
+    BOOST_CHECK(visited.find(node4) == visited.end());
+    BOOST_CHECK(visited.find(node5) == visited.end());
 }
 
 // Teste BFS com um grafo cíclico
