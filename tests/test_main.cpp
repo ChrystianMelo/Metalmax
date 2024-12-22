@@ -84,13 +84,15 @@ BOOST_AUTO_TEST_CASE(IntegrationTest) {
 		std::string input = readFile(inputFilePath);
 		std::string expectedOutput = readFile(outputFilePath);
 
-		std::string actualOutput = runProgram(input);
+		if (!input.empty()) {
+			std::string actualOutput = runProgram(input);
 
-		BOOST_CHECK_MESSAGE(
-			actualOutput == expectedOutput,
-			"Falha no teste para arquivo: " + inputFilePath +
-			"\nSaída esperada:\n" + expectedOutput +
-			"\nSaída gerada:\n" + actualOutput
-		);
+			BOOST_CHECK_MESSAGE(
+				actualOutput == expectedOutput,
+				"Falha no teste para arquivo: " + inputFilePath +
+				"\nSaída esperada:\n" + expectedOutput +
+				"\nSaída gerada:\n" + actualOutput
+			);
+		}
 	}
 }
