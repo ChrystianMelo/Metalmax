@@ -23,12 +23,12 @@
  */
 std::string readFile(const std::string& filePath) {
 	std::ifstream file(filePath);
-	if (!file) {
-		throw std::runtime_error("Erro ao abrir arquivo: " + filePath);
+	if (file) {
+		std::ostringstream buffer;
+		buffer << file.rdbuf();
+		return buffer.str();
 	}
-	std::ostringstream buffer;
-	buffer << file.rdbuf();
-	return buffer.str();
+	return "";
 }
 
 /**
