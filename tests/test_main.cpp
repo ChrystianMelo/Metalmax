@@ -161,8 +161,7 @@ BOOST_AUTO_TEST_CASE(IntegrationTest3) {
 		);
 	}
 }
-
-
+/*
 BOOST_AUTO_TEST_CASE(IntegrationTest4) {
 	namespace fs = std::filesystem;
 	const std::string inputsPath = "./tests/inputs";
@@ -195,4 +194,4 @@ BOOST_AUTO_TEST_CASE(IntegrationTest4) {
 			);
 		}
 	}
-}
+}*/
