@@ -16,13 +16,12 @@ bool contains(const std::vector<T*>& v, T& valor) {
 	}
 	return false;
 }
+
 int main() {
-	// Lendo o número de nós e arestas
 	std::size_t v, e;
 	std::cin >> v >> e;
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-	// Lendo os nós
 	std::vector<GraphNode*> geradores;
 	std::unordered_map<std::size_t, GraphNode*> indexNodes;
 
@@ -38,7 +37,6 @@ int main() {
 	}
 	assert(!geradores.empty());
 
-	// Lendo as arestas
 	for (std::size_t i = 0; i < e; i++) {
 		std::size_t src, trg, capacity;
 		std::cin >> src >> trg >> capacity;
@@ -46,7 +44,6 @@ int main() {
 		indexNodes[src]->connect(indexNodes[trg], static_cast<int>(capacity));
 	}
 
-	// Criando o source e o sink
 	GraphNode* source = new GraphNode(0);
 	for (auto* gerador : geradores)
 		source->connect(gerador, INT_MAX);
@@ -56,7 +53,6 @@ int main() {
 		if (!contains(geradores, *pair.second))
 			pair.second->connect(sink, pair.second->getDemand());
 
-	// Montando o grafo
 	std::vector<GraphNode*> nodes;
 	nodes.push_back(source);
 	for (auto& pair : indexNodes)
@@ -65,11 +61,9 @@ int main() {
 
 	Graph graph(nodes);
 
-	// Executando Edmond-Karp
 	int maxFlow = Algorithms::EdmondKarp(&graph, source, sink);
 	std::cout << maxFlow << std::endl;
 
-	// Calculando demanda não atendida
 	int totalDemand = 0;
 	for (GraphNode* node : graph.getNodes()) {
 		if (node->getDemand() > 0)
@@ -78,7 +72,6 @@ int main() {
 	int unattendedEnergy = totalDemand - maxFlow;
 	std::cout << unattendedEnergy << std::endl;
 
-	// Calculando o fluxo total dos geradores
 	int totalOutgoingFlow = 0;
 	for (auto* gerador : geradores) {
 		for (GraphEdge& edge : gerador->getEdges())
@@ -86,7 +79,6 @@ int main() {
 	}
 	std::cout << totalOutgoingFlow << std::endl;
 
-	// Encontrando arestas críticas
 	std::vector<GraphEdge> criticalEdges;
 	for (GraphNode* node : graph.getNodes()) {
 		for (GraphEdge& edge : node->getEdges()) {
@@ -103,7 +95,6 @@ int main() {
 			<< edge.getCapacity() << std::endl;
 	}
 
-	// Liberando memória
 	for (auto& pair : indexNodes)
 		delete pair.second;
 	delete source;

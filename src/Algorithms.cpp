@@ -10,43 +10,51 @@ using GraphNodeEqual = GraphNode::GraphNodeEqual;
 namespace {
 	/**
 	 * \brief Realiza uma BFS no grafo residual para encontrar um caminho de source até sink.
+	 *
+	 * \details Este método utiliza a busca em largura (BFS) para explorar o grafo residual
+	 *          e verificar se existe um caminho entre o nó de origem (`source`) e o nó de destino (`sink`).
+	 *          O grafo residual é representado por `graph`, onde as capacidades residuais indicam
+	 *          a quantidade de fluxo que ainda pode ser enviada pelas arestas.
+	 *
+	 * \param graph Ponteiro para o grafo residual.
+	 * \param source Ponteiro para o nó de origem do caminho.
+	 * \param sink Ponteiro para o nó de destino do caminho.
+	 * \param parentEdge Ponteiro para uma tabela hash que armazena a aresta de entrada para cada nó
+	 *                   no caminho encontrado. É usada para reconstruir o caminho ao término da BFS.
+	 *
+	 * \return Retorna `true` se um caminho de `source` até `sink` for encontrado, e `false` caso contrário.
+	 *
+	 * \complexidade O(V + E), onde V é o número de nós e E é o número de arestas no grafo.
+	 *               A BFS percorre todas as arestas adjacentes a cada nó uma vez durante a execução.
 	 */
 	bool bfsEdmondKarp(Graph* graph,
 		GraphNode* source,
 		GraphNode* sink,
 		std::unordered_map<GraphNode*, GraphEdge*, GraphNodeHash, GraphNodeEqual>* parentEdge)
 	{
-		// "parentEdge" guardará, para cada nó, a aresta usada para chegar nele
 		parentEdge->clear();
 
-		// Marca nós visitados
 		std::unordered_map<GraphNode*, bool, GraphNodeHash, GraphNodeEqual> visited;
 		for (auto* node : graph->getNodes()) {
 			visited[node] = false;
 		}
 
-		// Fila para BFS
 		std::queue<GraphNode*> queue;
 		queue.push(source);
 		visited[source] = true;
 
-		// BFS
 		while (!queue.empty()) {
 			GraphNode* u = queue.front();
 			queue.pop();
 
-			// Percorre todas as arestas saindo de u
 			for (GraphEdge& edge : u->getEdges()) {
 				GraphNode* v = edge.getTarget();
 
-				// Se ainda não visitado e há capacidade residual > 0
 				if (!visited[v] && edge.getFlow() > 0) {
-					// Registra a aresta usada para chegar em v
 					(*parentEdge)[v] = &edge;
 					visited[v] = true;
 					queue.push(v);
 
-					// Se chegamos no sink, podemos parar a BFS
 					if (*v == *sink) {
 						return true;
 					}
@@ -54,7 +62,6 @@ namespace {
 			}
 		}
 
-		// Não foi possível chegar ao sink
 		return false;
 	}
 
@@ -64,32 +71,27 @@ int Algorithms::EdmondKarp(Graph* graph, GraphNode* source, GraphNode* sink)
 {
 	int maxFlow = 0;
 
-	// parentEdge[v] = aresta usada para chegar em v na BFS
 	std::unordered_map<GraphNode*, GraphEdge*, GraphNodeHash, GraphNodeEqual> parentEdge;
 
-	// Enquanto existir caminho de aumento...
 	while (bfsEdmondKarp(graph, source, sink, &parentEdge))
 	{
 		int pathFlow = std::numeric_limits<int>::max();
 
-		// 1) Achar o gargalo (capacidade residual mínima) do caminho achado
 		GraphNode* curr = sink;
 		while (*curr != *source) {
 			GraphEdge* edge = parentEdge[curr];
-			pathFlow = std::min(pathFlow, edge->getFlow());  // edge->getFlow() = capacidade residual no sentido direto
+			pathFlow = std::min(pathFlow, edge->getFlow());
 			curr = edge->getSource();
 		}
 
-		// 2) Atualizar as capacidades residuais (aresta direta e reversa)
 		curr = sink;
 		while (*curr != *source) {
 			GraphEdge* edge = parentEdge[curr];
-			edge->setFlow(edge->getFlow() - pathFlow); // diminui capacidade residual direta
+			edge->setFlow(edge->getFlow() - pathFlow);
 			edge->getReverse()->setFlow(edge->getReverse()->getFlow() + pathFlow);
 			curr = edge->getSource();
 		}
 
-		// 3) Atualiza o fluxo total
 		maxFlow += pathFlow;
 	}
 
