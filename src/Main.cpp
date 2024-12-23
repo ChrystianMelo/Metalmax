@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cassert>
 #include <limits>
+#include <climits>
 
 #include "Algorithms.h"
 
