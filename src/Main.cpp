@@ -12,7 +12,7 @@ int main() {
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
 	// Lerndo os nodos.
-	std::size_t geradorIndex = 0;
+	std::vector<GraphNode*> geradores;
 	std::unordered_map<std::size_t, GraphNode> indexNodes;
 	for (std::size_t i = 0; i < v; i++) {
 		std::size_t index, t;
@@ -23,9 +23,9 @@ int main() {
 
 		indexNodes[index] = GraphNode(index, t);
 		if (t == 0)
-			geradorIndex = index;
+			geradores.push_back(&indexNodes[index]);
 	}
-	assert(geradorIndex != 0);
+	assert(!geradores.empty());
 
 	// Lerndo as arestas.
 	for (std::size_t i = 0; i < e; i++) {
@@ -39,11 +39,12 @@ int main() {
 
 	// Construidno o grafo.
 	GraphNode source(0); // source
-	source.connect(&indexNodes[geradorIndex], INT_MAX);
+	for (auto* gerador : geradores)
+		source.connect(gerador, INT_MAX);
 
 	GraphNode sink(v + 1);  // sink
 	for (auto& pair : indexNodes)
-		if (pair.second != indexNodes[geradorIndex])
+		if (!contains(geradores, pair.second))
 			pair.second.connect(&sink, pair.second.getDemand());
 
 	std::vector<GraphNode> nodes;
@@ -55,8 +56,7 @@ int main() {
 	Graph graph({ nodes });
 
 	// Passo 1
-	auto data = Algorithms::EdmondKarp(&graph, &source, &sink);
-	int maxFlow = data.first;
+	int maxFlow = Algorithms::EdmondKarp(&graph, &source, &sink);
 	std::cout << maxFlow << std::endl;
 
 	// Passo 2
@@ -71,23 +71,18 @@ int main() {
 
 	// Passo 3
 	int totalOutgoingFlow = 0;
-	for (GraphEdge& edge : indexNodes[geradorIndex].getEdges()) {
-		totalOutgoingFlow += edge.getFlow();
-	}
+	for (auto gerador : geradores)
+		for (GraphEdge& edge : gerador->getEdges()) {
+			totalOutgoingFlow += edge.getFlow();
+		}
 	std::cout << totalOutgoingFlow << std::endl;
 
 	// Passo 4
 	std::vector<GraphEdge> criticalEdges;
-	for (auto& node : graph.getNodes())
-		for (auto& edge : node.getEdges()) {
-			auto key = std::make_pair(node.getIndex(), edge.getTarget()->getIndex());
-			if (edge.getCapacity() == data.second[key])
-				criticalEdges.push_back(edge);
-		}
 
+	// ...
 
 	std::cout << criticalEdges.size() << std::endl;
-
 	for (GraphEdge& edge : criticalEdges) {
 		std::cout << edge.getSource()->getIndex() << " "
 			<< edge.getTarget()->getIndex() << " "
@@ -96,4 +91,5 @@ int main() {
 
 	return 0;
 }
+
 

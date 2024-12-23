@@ -60,55 +60,38 @@ namespace {
 
 }
 
-std::pair<int, std::unordered_map<std::pair<int, int>, int, PairHash>> Algorithms::EdmondKarp(Graph* graph, GraphNode* source, GraphNode* sink)
+int Algorithms::EdmondKarp(Graph* graph, GraphNode* source, GraphNode* sink)
 {
 	int maxFlow = 0;
 
 	// parentEdge[v] = aresta usada para chegar em v na BFS
 	std::unordered_map<GraphNode*, GraphEdge*, GraphNodeHash, GraphNodeEqual> parentEdge;
 
-	// (Pending) Corrigir.
-	std::unordered_map<std::pair<int, int>, int, PairHash> edgeFlow;
-
-	// Enquanto existir caminho de aumento (augmenting path) da BFS
-	while (bfsEdmondKarp(graph, source, sink, parentEdge)) {
-		// Encontra a capacidade residual mínima ao longo do caminho encontrado
+	// Enquanto existir caminho de aumento...
+	while (bfsEdmondKarp(graph, source, sink, parentEdge))
+	{
 		int pathFlow = std::numeric_limits<int>::max();
 
-		// 1) Percorrer o caminho do sink até source usando parentEdge
+		// 1) Achar o gargalo (capacidade residual mínima) do caminho achado
 		GraphNode* curr = sink;
 		while (*curr != *source) {
 			GraphEdge* edge = parentEdge[curr];
-			pathFlow = std::min(pathFlow, edge->getFlow());
+			pathFlow = std::min(pathFlow, edge->getFlow());  // edge->getFlow() = capacidade residual no sentido direto
 			curr = edge->getSource();
 		}
 
-		// 2) Atualiza capacidades do grafo residual (arestas e reversas)
+		// 2) Atualizar as capacidades residuais (aresta direta e reversa)
 		curr = sink;
 		while (*curr != *source) {
 			GraphEdge* edge = parentEdge[curr];
-
-			// Subtrair pathFlow da aresta no sentido direto
-			edge->setFlow(edge->getFlow() - pathFlow);
-
-			// Somar pathFlow na aresta reversa
-			auto reverse = edge->getReverse();
-			reverse->setFlow(reverse->getFlow() + pathFlow);
-
+			edge->setFlow(edge->getFlow() - pathFlow); // diminui capacidade residual direta
+			edge->getReverse()->setFlow(edge->getReverse()->getFlow() + pathFlow);
 			curr = edge->getSource();
 		}
 
-		// Soma no fluxo total
+		// 3) Atualiza o fluxo total
 		maxFlow += pathFlow;
-
-		for (const auto& pair : parentEdge) {
-			auto edge = pair.second;
-			if (edge->getFlow() > 0) {
-				std::pair<int, int> key = std::make_pair(edge->getSource()->getIndex(), edge->getTarget()->getIndex());
-				edgeFlow[key] = edge->getFlow();
-			}
-		}
 	}
 
-	return std::make_pair<>(maxFlow, edgeFlow);
+	return maxFlow;
 }
