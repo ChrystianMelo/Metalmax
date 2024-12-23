@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_CASE(TestSingleEdge)
 	nodeS.connect(&nodeT, 10);
 
 	// Monta o grafo
-	Graph graph({ nodeS, nodeT });
+	Graph graph({ &nodeS, &nodeT });
 
 	// Executa Edmond-Karp
 	int maxFlow = Algorithms::EdmondKarp(&graph, &graph.getNodes()[0], &graph.getNodes()[1]
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(TestMultiplePaths)
 	node3.connect(&nodeT, 10);  // 3->T
 
 	// Monta o grafo
-	Graph graph({ nodeS, node1, node2, node3, nodeT });
+	Graph graph({ &nodeS, &node1, &node2, &node3, &nodeT });
 
 	// Executa Edmond-Karp
 	int maxFlow = Algorithms::EdmondKarp(&graph, &graph.getNodes()[0], &graph.getNodes()[4]);
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(TestNoPath)
 	nodeT.connect(&node2, 10);
 
 	// Monta o grafo
-	Graph graph({ nodeS, node1, nodeT, node2 });
+	Graph graph({ &nodeS, &node1, &nodeT, &node2 });
 
 	// Executa Edmond-Karp
 	int maxFlow = Algorithms::EdmondKarp(&graph, &graph.getNodes()[0], &graph.getNodes()[2]);
