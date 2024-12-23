@@ -10,76 +10,17 @@
 #include <filesystem>
 #include <set>
 
-/**
- * \brief Compara duas strings de entrada para verificar igualdade em estrutura e conteúdo.
- *
- * Esta função realiza a comparação de duas strings formatadas. A estrutura esperada é:
- * 1. Uma palavra inicial, seguida por um número (m1/m2).
- * 2. Um conjunto de palavras (de tamanho m1/m2).
- * 3. Um número adicional (n1/n2), seguido por n1/n2 linhas contendo palavras.
- *
- * A função verifica se:
- * - A palavra inicial e os números m1/n1 são iguais.
- * - Os conjuntos de palavras associados são equivalentes.
- * - As palavras nas linhas subsequentes (como um conjunto) são iguais.
- *
- * \param input1 Primeira string de entrada a ser comparada.
- * \param input2 Segunda string de entrada a ser comparada.
- *
- * \return Verdadeiro se as duas strings forem estruturalmente e semanticamente iguais; falso caso contrário.
- */
-bool compareStrings(const std::string& input1, const std::string& input2) {
-	std::istringstream stream1(input1);
-	std::istringstream stream2(input2);
 
-	std::string word1, word2;
-	stream1 >> word1;
-	stream2 >> word2;
-	if (word1 != word2) return false;
-
-	int m1, m2;
-	stream1 >> m1;
-	stream2 >> m2;
-	if (m1 != m2) return false;
-
-	std::set<std::string> set1, set2;
-	for (int i = 0; i < m1; ++i) {
-		stream1 >> word1;
-		set1.insert(word1);
-	}
-	for (int i = 0; i < m2; ++i) {
-		stream2 >> word2;
-		set2.insert(word2);
-	}
-	if (set1 != set2) return false;
-
-	int n1, n2;
-	stream1 >> n1;
-	stream2 >> n2;
-	if (n1 != n2) return false;
-
-	std::set<std::string>  allWords1, allWords2;
+std::vector<std::string> splitLines(const std::string& text) {
+	std::vector<std::string> lines;
+	std::stringstream ss(text);
 	std::string line;
 
-	std::getline(stream1, line); 	std::getline(stream2, line);
-	for (int i = 0; i < n1; ++i) {
-		std::getline(stream1, line);
-		std::istringstream lineStream1(line);
-		while (lineStream1 >> word1) {
-			allWords1.insert(word1);
-		}
+	while (std::getline(ss, line)) {
+		lines.push_back(line);
 	}
 
-	for (int i = 0; i < n2; ++i) {
-		std::getline(stream2, line);
-		std::istringstream lineStream2(line);
-		while (lineStream2 >> word2) {
-			allWords2.insert(word2);
-		}
-	}
-
-	return allWords1 == allWords2;
-
+	return lines;
 }
 
 /**
