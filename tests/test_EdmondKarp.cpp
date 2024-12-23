@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE(TestSingleEdge)
 	Graph graph({ &nodeS, &nodeT });
 
 	// Executa Edmond-Karp
-	int maxFlow = Algorithms::EdmondKarp(&graph, &graph.getNodes()[0], &graph.getNodes()[1]);
+	int maxFlow = Algorithms::EdmondKarp(&graph, graph.getNodes()[0], graph.getNodes()[1]);
 	BOOST_CHECK(maxFlow == 10); // Deve ser 10
 }
 
@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(TestMultiplePaths)
 	Graph graph({ &nodeS, &node1, &node2, &node3, &nodeT });
 
 	// Executa Edmond-Karp
-	int maxFlow = Algorithms::EdmondKarp(&graph, &graph.getNodes()[0], &graph.getNodes()[4]);
+	int maxFlow = Algorithms::EdmondKarp(&graph, graph.getNodes()[0], graph.getNodes()[4]);
 
 	// Fluxo deve ser 10 (5 passando por S->1->3->T e 5 passando por S->2->3->T)
 	BOOST_CHECK(maxFlow == 10);
@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE(TestNoPath)
 	Graph graph({ &nodeS, &node1, &nodeT, &node2 });
 
 	// Executa Edmond-Karp
-	int maxFlow = Algorithms::EdmondKarp(&graph, &graph.getNodes()[0], &graph.getNodes()[2]);
+	int maxFlow = Algorithms::EdmondKarp(&graph, graph.getNodes()[0], graph.getNodes()[2]);
 
 	// Valida
 	BOOST_CHECK(maxFlow == 0); // sem caminho, fluxo = 0
