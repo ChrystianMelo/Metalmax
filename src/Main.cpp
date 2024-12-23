@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cassert>
 #include <climits>
+#include <limits>
 
 #include "Graph.h"
 #include "GraphNode.h"
