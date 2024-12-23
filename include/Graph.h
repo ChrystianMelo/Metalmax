@@ -29,7 +29,7 @@ public:
 	 * Este construtor inicializa o grafo com um vetor de nós fornecido. Ele permite
 	 * a criação de um grafo já populado com nós.
 	 */
-	Graph(const std::vector<GraphNode>& nodes) : m_nodes(nodes) {}
+	Graph(const std::vector<GraphNode*> nodes) : m_nodes(nodes) {}
 
 	/**
 	 * \brief Obtém os nós do grafo.
@@ -38,7 +38,7 @@ public:
 	 * Este método retorna todos os nós armazenados no grafo. Pode ser usado para
 	 * manipular ou acessar os nós do grafo.
 	 */
-	std::vector<GraphNode>& getNodes();
+	std::vector<GraphNode*>& getNodes();
 
 protected:
 	/**
@@ -47,7 +47,7 @@ protected:
 	 * Um vetor que contém todos os nós (GraphNodes) presentes no grafo. Cada nó
 	 * pode estar conectado a outros nós através de arestas (GraphEdges).
 	 */
-	std::vector<GraphNode> m_nodes;
+	std::vector<GraphNode*> m_nodes;
 };
 
 #endif // GRAPH_H

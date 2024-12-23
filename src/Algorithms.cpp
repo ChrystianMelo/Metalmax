@@ -14,15 +14,15 @@ namespace {
 	bool bfsEdmondKarp(Graph* graph,
 		GraphNode* source,
 		GraphNode* sink,
-		std::unordered_map<GraphNode*, GraphEdge*, GraphNodeHash, GraphNodeEqual>& parentEdge)
+		std::unordered_map<GraphNode*, GraphEdge*, GraphNodeHash, GraphNodeEqual>* parentEdge)
 	{
 		// "parentEdge" guardará, para cada nó, a aresta usada para chegar nele
-		parentEdge.clear();
+		parentEdge->clear();
 
 		// Marca nós visitados
 		std::unordered_map<GraphNode*, bool, GraphNodeHash, GraphNodeEqual> visited;
-		for (auto& node : graph->getNodes()) {
-			visited[&node] = false;
+		for (auto* node : graph->getNodes()) {
+			visited[node] = false;
 		}
 
 		// Fila para BFS
@@ -42,7 +42,7 @@ namespace {
 				// Se ainda não visitado e há capacidade residual > 0
 				if (!visited[v] && edge.getFlow() > 0) {
 					// Registra a aresta usada para chegar em v
-					parentEdge[v] = &edge;
+					(*parentEdge)[v] = &edge;
 					visited[v] = true;
 					queue.push(v);
 
@@ -68,7 +68,7 @@ int Algorithms::EdmondKarp(Graph* graph, GraphNode* source, GraphNode* sink)
 	std::unordered_map<GraphNode*, GraphEdge*, GraphNodeHash, GraphNodeEqual> parentEdge;
 
 	// Enquanto existir caminho de aumento...
-	while (bfsEdmondKarp(graph, source, sink, parentEdge))
+	while (bfsEdmondKarp(graph, source, sink, &parentEdge))
 	{
 		int pathFlow = std::numeric_limits<int>::max();
 
