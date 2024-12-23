@@ -50,6 +50,11 @@ public:
 	/**
 	 *
 	 */
+	GraphNode(std::size_t index, int demand);
+
+	/**
+	 *
+	 */
 	std::size_t getIndex() const;
 
 	/**
@@ -60,12 +65,22 @@ public:
 	/**
 	 *
 	 */
+	void connect(GraphNode* node, int weight);
+
+	/**
+	 *
+	 */
 	void disconnect(GraphNode* node);
 
 	/**
 	 *
 	 */
 	bool isConnected(GraphNode* node);
+
+	/**
+	 *
+	 */
+	int getDemand() const;
 
 	/**
 	 * \brief Obtém as arestas conectadas ao nó.
@@ -85,6 +100,11 @@ public:
 	 *
 	 */
 	bool operator==(const GraphNode& other) const;
+
+	/**
+	 *
+	 */
+	bool operator!=(const GraphNode& other) const;
 
 	/**
 	 *
@@ -129,6 +149,11 @@ private:
 	 *
 	 */
 	std::size_t m_index;
+
+	/**
+	 *
+	 */
+	int m_demand;
 };
 
 

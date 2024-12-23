@@ -24,6 +24,16 @@ public:
 	GraphEdge(GraphNode* source, GraphNode* target);
 
 	/**
+	 * \brief Construtor de GraphEdge.
+	 * \param source Nó de origem da aresta.
+	 * \param target Nó de destino da aresta.
+	 * \param weight Peso.
+	 *
+	 * Cria uma aresta que conecta o nó de origem ao nó de destino.
+	 */
+	GraphEdge(GraphNode* source, GraphNode* target, int weight);
+
+	/**
 	 * \brief Obtém o nó de origem da aresta.
 	 * \return Ponteiro para o nó de origem.
 	 *
@@ -42,13 +52,27 @@ public:
 	/**
 	 *
 	 */
-	int getWeight() const { return m_weight; };
+	GraphEdge* getReverse();
+
+	/**
+	 *
+	 */
+	void setFlow(int flow) { m_flow = flow; };
+
+	/**
+	 *
+	 */
+	int getFlow() const { return m_flow; };
+
+	/**
+	 *
+	 */
+	int getCapacity() const { return m_capacity; };
 
 	/**
 	 *
 	 */
 	bool operator==(const GraphEdge& other) const;
-
 private:
 	/**
 	 * \brief O nó de origem da aresta.
@@ -64,7 +88,19 @@ private:
 	 */
 	GraphNode* m_target;
 
-	int m_weight = 1;
-};
+	/**
+	 *
+	 */
+	int m_capacity;
 
+	/**
+	 *
+	 */
+	int m_flow;
+
+	/**
+	 *
+	 */
+	GraphEdge* m_reverse;
+};
 #endif // GRAPHEDGE_H
