@@ -10,7 +10,6 @@
 #include <filesystem>
 #include <set>
 
-
 std::vector<std::string> splitLines(const std::string& text) {
 	std::vector<std::string> lines;
 	std::stringstream ss(text);
@@ -84,7 +83,7 @@ std::string runProgram(const std::string& input) {
 }
 
 // Roda os arquivos de teste.
-BOOST_AUTO_TEST_CASE(IntegrationTest) {
+BOOST_AUTO_TEST_CASE(IntegrationTest1) {
 	namespace fs = std::filesystem;
 	const std::string inputsPath = "./tests/inputs";
 	const std::string outputsPath = "./tests/outputs";
@@ -107,6 +106,24 @@ BOOST_AUTO_TEST_CASE(IntegrationTest) {
 			"\nEsperado: " + expectedLines[0] +
 			"\nGerado: " + actualLines[0]
 		);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(IntegrationTest2) {
+	namespace fs = std::filesystem;
+	const std::string inputsPath = "./tests/inputs";
+	const std::string outputsPath = "./tests/outputs";
+
+	for (const auto& inputFile : fs::directory_iterator(inputsPath)) {
+		std::string inputFilePath = inputFile.path().string();
+		std::string outputFilePath = outputsPath + "/" + inputFile.path().filename().string();
+
+		std::string input = readFile(inputFilePath);
+		std::string expectedOutput = readFile(outputFilePath);
+		std::string actualOutput = runProgram(input);
+
+		std::vector<std::string> expectedLines = splitLines(expectedOutput);
+		std::vector<std::string> actualLines = splitLines(actualOutput);
 
 		// Teste 2: Verifica se a segunda linha é igual
 		BOOST_CHECK_MESSAGE(
@@ -115,6 +132,25 @@ BOOST_AUTO_TEST_CASE(IntegrationTest) {
 			"\nEsperado: " + (expectedLines.size() > 1 ? expectedLines[1] : "<ausente>") +
 			"\nGerado: " + (actualLines.size() > 1 ? actualLines[1] : "<ausente>")
 		);
+	}
+}
+
+
+BOOST_AUTO_TEST_CASE(IntegrationTest3) {
+	namespace fs = std::filesystem;
+	const std::string inputsPath = "./tests/inputs";
+	const std::string outputsPath = "./tests/outputs";
+
+	for (const auto& inputFile : fs::directory_iterator(inputsPath)) {
+		std::string inputFilePath = inputFile.path().string();
+		std::string outputFilePath = outputsPath + "/" + inputFile.path().filename().string();
+
+		std::string input = readFile(inputFilePath);
+		std::string expectedOutput = readFile(outputFilePath);
+		std::string actualOutput = runProgram(input);
+
+		std::vector<std::string> expectedLines = splitLines(expectedOutput);
+		std::vector<std::string> actualLines = splitLines(actualOutput);
 
 		// Teste 3: Verifica se a terceira linha é igual
 		BOOST_CHECK_MESSAGE(
@@ -123,6 +159,25 @@ BOOST_AUTO_TEST_CASE(IntegrationTest) {
 			"\nEsperado: " + (expectedLines.size() > 2 ? expectedLines[2] : "<ausente>") +
 			"\nGerado: " + (actualLines.size() > 2 ? actualLines[2] : "<ausente>")
 		);
+	}
+}
+
+
+BOOST_AUTO_TEST_CASE(IntegrationTest4) {
+	namespace fs = std::filesystem;
+	const std::string inputsPath = "./tests/inputs";
+	const std::string outputsPath = "./tests/outputs";
+
+	for (const auto& inputFile : fs::directory_iterator(inputsPath)) {
+		std::string inputFilePath = inputFile.path().string();
+		std::string outputFilePath = outputsPath + "/" + inputFile.path().filename().string();
+
+		std::string input = readFile(inputFilePath);
+		std::string expectedOutput = readFile(outputFilePath);
+		std::string actualOutput = runProgram(input);
+
+		std::vector<std::string> expectedLines = splitLines(expectedOutput);
+		std::vector<std::string> actualLines = splitLines(actualOutput);
 
 		// Verificar se a saída gerada tem pelo menos o número de linhas esperado
 		BOOST_REQUIRE_MESSAGE(
