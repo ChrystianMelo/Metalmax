@@ -1,5 +1,6 @@
 #include <cassert>
 #include <queue>
+#include <limits>
 
 #include "Algorithms.h"
 
