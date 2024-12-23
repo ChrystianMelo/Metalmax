@@ -24,8 +24,8 @@ BOOST_AUTO_TEST_CASE(TestSingleEdge)
 	Graph graph({ &nodeS, &nodeT });
 
 	// Executa Edmond-Karp
-	int maxFlow = Algorithms::EdmondKarp(&graph, &graph.getNodes()[0], &graph.getNodes()[1]
-		BOOST_CHECK(maxFlow == 10); // Deve ser 10
+	int maxFlow = Algorithms::EdmondKarp(&graph, &graph.getNodes()[0], &graph.getNodes()[1]);
+	BOOST_CHECK(maxFlow == 10); // Deve ser 10
 }
 
 /**
