@@ -1,9 +1,9 @@
 # Compilador e flags
 CXX = g++
-CXXFLAGS = -std=c++20 -g -Wall -I./include/
+CXXFLAGS = -std=c++20 -g -Wall -Wextra -Wpedantic -Wformat-security -Wconversion -Werror -I./include/
 LDFLAGS = -L /usr/local/lib -lboost_unit_test_framework
 
-# DiretÛrios
+# Diret√≥rios
 SRC_DIR = src
 OBJ_DIR = obj
 BIN_DIR = bin
@@ -18,18 +18,18 @@ OBJECTS_NO_MAIN = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SOURCES_NO_MAIN
 TEST_SOURCES = $(wildcard $(TEST_DIR)/test_*.cpp)
 TEST_OBJECTS = $(patsubst $(TEST_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(TEST_SOURCES))
 
-# Execut·veis
+# Execut√°veis
 EXECUTABLE = $(BIN_DIR)/run.out
 TEST_EXECUTABLE = $(BIN_DIR)/run_test.out
 
-# CriaÁ„o dos diretÛrios, se n„o existirem
+# Cria√ß√£o dos diret√≥rios, se n√£o existirem
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
 $(BIN_DIR):
 	mkdir -p $(BIN_DIR)
 
-# Alvo padr„o: compilar o programa principal
+# Alvo padr√£o: compilar o programa principal
 all: $(BIN_DIR) $(OBJ_DIR) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
