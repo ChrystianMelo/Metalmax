@@ -91,12 +91,12 @@ private:
 	/**
 	 *
 	 */
-	int m_capacity;
+	int m_flow;
 
 	/**
 	 *
 	 */
-	int m_flow;
+	int m_capacity;
 
 	/**
 	 *
