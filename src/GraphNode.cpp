@@ -14,11 +14,6 @@ void GraphNode::connect(GraphNode* node, int weight) {
 	m_edges.push_back(GraphEdge(this, node, weight));
 }
 
-
-void GraphNode::disconnect(GraphNode* node) {
-	m_edges.erase(std::remove(m_edges.begin(), m_edges.end(), GraphEdge(this, node)), m_edges.end());
-}
-
 bool GraphNode::isConnected(GraphNode* node) {
 	for (GraphEdge& e : m_edges)
 		if (*e.getTarget() == *node)

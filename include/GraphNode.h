@@ -81,12 +81,6 @@ public:
 	void connect(GraphNode* node, int weight);
 
 	/**
-	 * \brief Desconecta este nó de outro nó.
-	 * \param node Ponteiro para o nó a ser desconectado.
-	 */
-	void disconnect(GraphNode* node);
-
-	/**
 	 * \brief Verifica se este nó está conectado a outro nó.
 	 * \param node Ponteiro para o nó a ser verificado.
 	 * \return Verdadeiro se os nós estão conectados, falso caso contrário.
